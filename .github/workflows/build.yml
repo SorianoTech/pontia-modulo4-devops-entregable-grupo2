@@ -3,7 +3,7 @@ name: Build project
 on:
   push:
     branches:
-      - main
+      - feature/build-action
   workflow_dispatch:
 
 jobs:
@@ -29,6 +29,13 @@ jobs:
           curl -o data/raw/adult.data https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data
           curl -o data/raw/adult.test https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test
 
+          if [ -z "$( ls -A '/models' )" ]; then
+            echo "models where not downloaded from curl"
+            exit 1
+          fi
+
+          echo "Files downloaded successfully"
+
       - name: Train and save models
         run: |
           python src/main.py
@@ -38,25 +45,31 @@ jobs:
         run: |
           mkdir -p model-test-results
           PYTHONPATH=src pytest model_tests/ --capture=tee-sys --cov=model --cov=evaluate --cov=data_loader --cov-report=term --cov-report=html --junitxml=test-results/results.xml > model-test-results/results.log
-        continue-on-error: true
+        continue-on-error: false
 
-  release:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    permissions:
-      contents: write
-    steps:
       - name: Generate evidences
+        continue-on-error: true
         run: |
           mkdir -p release
 
           touch release/execution-evidences.txt
 
-          echo "Autor: ${{ github.actor }}" >> execution-evidences.txt
-          echo "Commit: ${{ github.sha }}" >> execution-evidences.txt
-          echo "Fecha: $(date)" >> info.txt
+          echo "Autor: ${{ github.actor }}" >> release/execution-evidences.txt
+          echo "Commit: ${{ github.sha }}" >> release/execution-evidences.txt
+          echo "Fecha: $(date)" >> release/execution-evidences.txt
+
+          echo "Checking if evidences file exists"
+          file="release/execution-evidences.txt"
+          if [ ! -f "$FILE" ]; then
+            echo "ERROR: El fichero $FILE no existe."
+            exit 1
+          fi
+          if [ ! -s "$FILE" ]; then
+            echo "ERROR: El fichero $FILE existe pero está vacío."
+            exit 1
+          fi
+          echo "OK: El fichero $FILE existe y contiene información:"
+          cat "$FILE"
 
       - name: Generate tag with release
         uses: softprops/action-gh-release@v1
@@ -66,7 +79,8 @@ jobs:
             models/scaler.pkl
             models/encoders.pkl
             releases/execution-evidences.txt
-          tag_name: -${{ github.run_number }}
+          tag_name: tag-${{ github.ref_name }}
+            -${{github.event.head_commit.timestamp}}-${{ github.run_id }}
           body: |
             Model trained on ${{ github.event.head_commit.timestamp }} by ${{ github.event.head_commit.author.name }}"
           draft: false

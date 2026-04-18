@@ -10,7 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -48,14 +49,11 @@ jobs:
             exit 1
           fi
 
-      - name: Model tests
+      - name: Unit tests and Model tests
         id: tests
         run: |
           mkdir -p model-test-results
-          PYTHONPATH=src model_tests pytest model_tests/ --capture=tee-sys --cov=model --cov=evaluate --cov=data_loader --cov-report=term --cov-report=html --junitxml=test-results/results.xml > model-test-results/results.log
-
-          python model_tests/test_model.py
-
+          PYTHONPATH=. pytest unit_tests/ model_tests/ --capture=tee-sys --cov=model --cov=evaluate --cov=data_loader --cov-report=term --cov-report=html --junitxml=test-results/results.xml > model-test-results/results.log
         continue-on-error: false
 
       - name: Generate evidences

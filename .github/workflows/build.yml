@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -q --no-cache-dir -r requirements.txt
 
       - name: Download Adult datasets
         run: |
@@ -53,7 +53,7 @@ jobs:
         id: tests
         run: |
           mkdir -p model-test-results
-          PYTHONPATH=. pytest model_tests/ --capture=tee-sys --cov-report=term --cov-report=html --junitxml=model-test-results/results.xml > model-test-results/results.log
+          PYTHONPATH=. pytest model_tests/
         continue-on-error: false
 
       - name: Generate evidences

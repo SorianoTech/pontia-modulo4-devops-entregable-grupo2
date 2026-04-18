@@ -53,7 +53,7 @@ jobs:
         id: tests
         run: |
           mkdir -p model-test-results
-          PYTHONPATH=. pytest model_tests/ --capture=tee-sys --cov=evaluate --cov=data_loader --cov-report=term --cov-report=html --junitxml=model-test-results/results.xml > model-test-results/results.log
+          PYTHONPATH=. pytest model_tests/ --capture=tee-sys --cov-report=term --cov-report=html --junitxml=model-test-results/results.xml > model-test-results/results.log
         continue-on-error: false
 
       - name: Generate evidences

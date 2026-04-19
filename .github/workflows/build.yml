@@ -69,16 +69,16 @@ jobs:
 
           echo "Checking if evidences file exists"
           file="release/execution-evidences.txt"
-          if [ ! -f "$FILE" ]; then
-            echo "ERROR: El fichero $FILE no existe."
+          if [ ! -f "$file" ]; then
+            echo "ERROR: El fichero $file no existe."
             exit 1
           fi
-          if [ ! -s "$FILE" ]; then
-            echo "ERROR: El fichero $FILE existe pero está vacío."
+          if [ ! -s "$file" ]; then
+            echo "ERROR: El fichero $file existe pero está vacío."
             exit 1
           fi
-          echo "OK: El fichero $FILE existe y contiene información:"
-          cat "$FILE"
+          echo "OK: El fichero $file existe y contiene información:"
+          cat "$file"
 
       - name: Generate tag with release
         uses: softprops/action-gh-release@v1
@@ -88,8 +88,7 @@ jobs:
             models/scaler.pkl
             models/encoders.pkl
             releases/execution-evidences.txt
-          tag_name: tag-${{ github.ref_name }}
-            -${{github.event.head_commit.timestamp}}-${{ github.run_id }}
+          tag_name: tag-${{ github.run_id }}-${{github.event.head_commit.timestamp}}-${{ github.event.head_commit.author.username }}
           body: |
             Model trained on ${{ github.event.head_commit.timestamp }} by ${{ github.event.head_commit.author.name }}"
           draft: false

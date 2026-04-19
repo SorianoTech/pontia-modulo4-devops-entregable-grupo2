@@ -3,7 +3,7 @@ name: Build project
 on:
   push:
     branches:
-      - feature/build-action
+      - main
   workflow_dispatch:
 
 jobs:

@@ -65,7 +65,7 @@ jobs:
 
           echo "Autor: ${{ github.actor }}" >> release/execution-evidences.txt
           echo "Commit: ${{ github.sha }}" >> release/execution-evidences.txt
-          echo "Fecha: $(date)" >> release/execution-evidences.txt
+          echo "Commit date: ${{ github.event.head_commit.timestamp }}" >> release/execution-evidences.txt
 
           echo "Checking if evidences file exists"
           file="release/execution-evidences.txt"
@@ -87,7 +87,7 @@ jobs:
             models/model.pkl
             models/scaler.pkl
             models/encoders.pkl
-            releases/execution-evidences.txt
+            release/execution-evidences.txt
           tag_name: v1.${{ github.run_number }}.0
           body: |
             Model trained on ${{ github.event.head_commit.timestamp }} by ${{ github.event.head_commit.author.username }}"

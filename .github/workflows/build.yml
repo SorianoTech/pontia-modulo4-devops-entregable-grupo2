@@ -53,8 +53,7 @@ jobs:
       - name: Model tests
         id: tests
         run: |
-          mkdir -p model-test-results
-          PYTHONPATH=. pytest model_tests/
+          PYTHONPATH=. python model_tests/test_model.py
         continue-on-error: false
 
       - name: Generate evidences

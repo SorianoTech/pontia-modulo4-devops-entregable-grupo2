@@ -53,7 +53,7 @@ jobs:
       - name: Model tests
         id: tests
         run: |
-          PYTHONPATH=. python model_tests/test_model.py
+          PYTHONPATH=. pytest model_tests/test_model.py
         continue-on-error: false
 
       - name: Generate evidences

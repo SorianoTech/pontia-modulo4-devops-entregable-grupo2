@@ -88,8 +88,8 @@ jobs:
             models/scaler.pkl
             models/encoders.pkl
             releases/execution-evidences.txt
-          tag_name: tag-${{ github.run_id }}-${{github.event.head_commit.timestamp}}-${{ github.event.head_commit.author.username }}
+          tag_name: v1.${{ github.run_number }}.0
           body: |
-            Model trained on ${{ github.event.head_commit.timestamp }} by ${{ github.event.head_commit.author.name }}"
+            Model trained on ${{ github.event.head_commit.timestamp }} by ${{ github.event.head_commit.author.username }}"
           draft: false
           prerelease: false

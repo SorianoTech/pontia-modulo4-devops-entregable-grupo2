@@ -21,8 +21,11 @@ data/
 # Environments
 venv
 
-# Tests
-.pytest_cache
-
 # Folders
 __pycache__
+
+.coverage
+.venv/
+# --- Python bytecode ---
+__pycache__/   
+test-results/

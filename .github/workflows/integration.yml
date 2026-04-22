@@ -30,7 +30,7 @@ jobs:
         id: tests
         run: |
             mkdir -p test-results
-            PYTHONPATH=src pytest unit_tests/ --cov=src --cov-report=term --cov-report=html --junitxml=test-results/results.xml > test-results/results.log
+            PYTHONPATH=src pytest unit_tests/ --cov=src --cov-report=term --cov-report=html --junitxml=test-results/results.xml --disable-warnings -p no:warnings > test-results/results.log
         continue-on-error: true
 
       - name: Comment test results and coverage on PR

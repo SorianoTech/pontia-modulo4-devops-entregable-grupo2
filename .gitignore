@@ -27,11 +27,8 @@ test-results/
 # Environments
 venv
 
-<<<<<<< HEAD
-=======
 # Tests
 .pytest_cache
 
 # Folders
 __pycache__
->>>>>>> 1ef478b (Add libs to requirements.txt)

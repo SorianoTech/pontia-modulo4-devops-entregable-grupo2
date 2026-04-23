@@ -20,7 +20,8 @@ data/
 
 
 .coverage
-.venv/
+.venv/**
+venv
 # --- Python bytecode ---
 __pycache__/   
 test-results/

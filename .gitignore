@@ -17,3 +17,10 @@ data/
 *.parquet
 *.zip
 *.gz
+
+
+.coverage
+.venv/
+# --- Python bytecode ---
+__pycache__/   
+test-results/

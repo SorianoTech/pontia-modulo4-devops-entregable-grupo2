@@ -18,14 +18,12 @@ data/
 *.zip
 *.gz
 
-# Environments
-venv
-
-# Folders
-__pycache__
-
 .coverage
 .venv/
 # --- Python bytecode ---
 __pycache__/   
 test-results/
+
+# Environments
+venv
+

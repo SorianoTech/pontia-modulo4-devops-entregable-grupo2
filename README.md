@@ -140,7 +140,7 @@ Carpetas/archivos que necesita:
 - `requirements.txt`
 - `pytest.ini`
 
-## 3.2 build.yml (Entrenamiento y publicacion de artefactos)
+## 3.2 Entrenamiento y publicacion de artefactos (CI)
 
 Disparadores:
 
@@ -165,7 +165,7 @@ Carpetas/archivos que necesita:
 - `data/raw/` (la crea/usa durante el workflow)
 - `models/` (se generan artefactos)
 
-## 3.3 deploy.yml (Despliegue)
+## 3.3 Despliegue (CD)
 
 Disparador:
 
@@ -184,7 +184,7 @@ Carpetas/archivos que necesita:
   - `deployment/requirements.txt`
   - Artefactos publicados previamente por `build` en GitHub Releases.
 
-## 3.4 Orden recomendado: build, deploy e integration
+## 3.4 Orden recomendado: integration, build y deploy
 
 Si hablamos de flujo de calidad y entrega de extremo a extremo, el orden recomendado es:
 

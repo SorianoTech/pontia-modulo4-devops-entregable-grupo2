@@ -11,7 +11,7 @@ pytest-cov==4.1.0
 python-dateutil==2.9.0.post0
 pytz==2026.1.post1
 scikit-learn==1.6.1
-scipy==1.17.1
+scipy<1.16
 six==1.17.0
 threadpoolctl==3.6.0
 tzdata==2026.1

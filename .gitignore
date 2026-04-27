@@ -18,9 +18,17 @@ data/
 *.zip
 *.gz
 
-
 .coverage
 .venv/
 # --- Python bytecode ---
 __pycache__/   
 test-results/
+
+# Environments
+venv
+
+# Tests
+.pytest_cache
+
+# Folders
+__pycache__

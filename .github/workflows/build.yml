@@ -1,0 +1,93 @@
+name: Build project
+
+on:
+  pull_request:
+    types: 
+      - closed
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -q --no-cache-dir -r requirements.txt
+
+          echo "Dependencies installed successfully"
+      - name: Download Adult datasets
+        run: |
+          mkdir -p data/raw
+
+          curl -o data/raw/adult.data https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data
+          curl -o data/raw/adult.test https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test
+
+          if [ -z "$( ls -A 'data/raw' )" ]; then
+            echo "Data files where not downloaded from archive"
+            exit 1
+          fi
+
+          echo "Files downloaded successfully"
+          
+      - name: Train and save models
+        run: |
+          python src/main.py
+          if [ -z "$( ls -A 'models' )" ]; then
+            echo "model was not generated from training"
+            exit 1
+          fi
+
+      - name: Model tests
+        id: tests
+        run: |
+          PYTHONPATH=. pytest model_tests/test_model.py
+        continue-on-error: false
+
+      - name: Generate evidences
+        continue-on-error: true
+        run: |
+          mkdir -p release
+
+          touch release/execution-evidences.txt
+          echo "Autor: ${{ github.actor }}" >> release/execution-evidences.txt
+          echo "Commit: ${{ github.sha }}" >> release/execution-evidences.txt
+          echo "Commit date: ${{ github.event.pull_request.merged_at }}" >> release/execution-evidences.txt
+
+          echo "Checking if evidences file exists"
+          file="release/execution-evidences.txt"
+          if [ ! -f "$file" ]; then
+            echo "ERROR: El fichero $file no existe."
+            exit 1
+          fi
+          if [ ! -s "$file" ]; then
+            echo "ERROR: El fichero $file existe pero está vacío."
+            exit 1
+          fi
+          echo "OK: El fichero $file existe y contiene información:"
+          cat "$file"
+
+      - name: Generate tag with release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            models/model.pkl
+            models/scaler.pkl
+            models/encoders.pkl
+            release/execution-evidences.txt
+          tag_name: v1.${{ github.run_number }}.0
+          body: |
+            Model trained on ${{ github.event.pull_request.merged_at }} by ${{ github.actor }}"
+          draft: false
+          prerelease: false

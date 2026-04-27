@@ -28,9 +28,22 @@ def test_prediction_values():
 
 def test_model_accuracy():
     model = joblib.load('models/model.pkl')
-    test_data = pd.read_csv('data/raw/adult.test', header=None, skiprows=1)
-    X_test = test_data.iloc[:, :-1]
-    y_test = test_data.iloc[:, -1].str.strip().str.replace('.', '', regex=False)
-    predictions = model.predict(X_test)
+    scaler = joblib.load('models/scaler.pkl')
+    encoders = joblib.load('models/encoders.pkl')
+    COLUMNS = [
+        "age", "workclass", "fnlwgt", "education", "education-num", "marital-status",
+        "occupation", "relationship", "race", "sex", "capital-gain", "capital-loss",
+        "hours-per-week", "native-country", "income"
+    ]
+    test_data = pd.read_csv('data/raw/adult.test', header=None, names=COLUMNS, skipinitialspace=True, skiprows=1)
+    test_data["income"] = test_data["income"].str.replace(".", "", regex=False)
+    test_data = test_data.dropna()
+    for col, le in encoders.items():
+        test_data[col] = le.transform(test_data[col])
+    test_data["income"] = test_data["income"].apply(lambda x: 1 if x == ">50K" else 0)
+    X_test = test_data.drop("income", axis=1)
+    y_test = test_data["income"].to_numpy()
+    X_test_scaled = scaler.transform(X_test)
+    predictions = model.predict(X_test_scaled)
     accuracy = accuracy_score(y_test, predictions)
     assert accuracy >= 0.80, f"Model accuracy below expected threshold: {accuracy:.2f}"

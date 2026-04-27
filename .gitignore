@@ -17,3 +17,19 @@ data/
 *.parquet
 *.zip
 *.gz
+
+.coverage
+.venv/**
+venv
+# --- Python bytecode ---
+__pycache__/   
+test-results/
+
+# Environments
+venv
+
+# Tests
+.pytest_cache
+
+# Folders
+__pycache__

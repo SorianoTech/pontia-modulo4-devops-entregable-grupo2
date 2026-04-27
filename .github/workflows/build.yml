@@ -3,13 +3,16 @@ name: Build project
 on:
   pull_request:
     types: 
-      - closed
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
   workflow_dispatch:
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
     permissions:
       contents: write
     steps:

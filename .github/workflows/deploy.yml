@@ -10,4 +10,5 @@ jobs:
     - name: Trigger Render Deployment
       run: |
         curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
-
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

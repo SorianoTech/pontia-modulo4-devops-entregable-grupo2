@@ -1,7 +1,6 @@
 name: Build project
 
 on:
-<<<<<<< HEAD
   pull_request:
     types: 
       - closed
@@ -13,17 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
-=======
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
->>>>>>> 79acc8e (rebase with some refactors)
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -36,7 +24,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-<<<<<<< HEAD
           pip install -q --no-cache-dir -r requirements.txt
 
           echo "Dependencies installed successfully"
@@ -53,22 +40,10 @@ jobs:
           fi
 
           echo "Files downloaded successfully"
-
-=======
-          pip install -r requirements.txt
-
-      - name: Download Adult datasets
-        run: |
-          mkdir -p data/raw
-          curl -o data/raw/adult.data https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data
-          curl -o data/raw/adult.test https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test
-
->>>>>>> 79acc8e (rebase with some refactors)
+          
       - name: Train and save models
         run: |
           python src/main.py
-
-<<<<<<< HEAD
           if [ -z "$( ls -A 'models' )" ]; then
             echo "model was not generated from training"
             exit 1
@@ -82,30 +57,10 @@ jobs:
 
       - name: Generate evidences
         continue-on-error: true
-=======
-      - name: Model tests
-        id: tests
-        run: |
-          mkdir -p model-test-results
-          PYTHONPATH=src pytest model_tests/ --capture=tee-sys --cov=model --cov=evaluate --cov=data_loader --cov-report=term --cov-report=html --junitxml=test-results/results.xml > model-test-results/results.log
-        continue-on-error: true
-
-  release:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    permissions:
-      contents: write
-    steps:
-      - name: Generate evidences
->>>>>>> 79acc8e (rebase with some refactors)
         run: |
           mkdir -p release
 
           touch release/execution-evidences.txt
-
-<<<<<<< HEAD
           echo "Autor: ${{ github.actor }}" >> release/execution-evidences.txt
           echo "Commit: ${{ github.sha }}" >> release/execution-evidences.txt
           echo "Commit date: ${{ github.event.pull_request.merged_at }}" >> release/execution-evidences.txt
@@ -122,11 +77,6 @@ jobs:
           fi
           echo "OK: El fichero $file existe y contiene información:"
           cat "$file"
-=======
-          echo "Autor: ${{ github.actor }}" >> execution-evidences.txt
-          echo "Commit: ${{ github.sha }}" >> execution-evidences.txt
-          echo "Fecha: $(date)" >> info.txt
->>>>>>> 79acc8e (rebase with some refactors)
 
       - name: Generate tag with release
         uses: softprops/action-gh-release@v1
@@ -135,16 +85,9 @@ jobs:
             models/model.pkl
             models/scaler.pkl
             models/encoders.pkl
-<<<<<<< HEAD
             release/execution-evidences.txt
           tag_name: v1.${{ github.run_number }}.0
           body: |
             Model trained on ${{ github.event.pull_request.merged_at }} by ${{ github.actor }}"
-=======
-            releases/execution-evidences.txt
-          tag_name: -${{ github.run_number }}
-          body: |
-            Model trained on ${{ github.event.head_commit.timestamp }} by ${{ github.event.head_commit.author.name }}"
->>>>>>> 79acc8e (rebase with some refactors)
           draft: false
           prerelease: false

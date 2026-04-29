@@ -118,10 +118,12 @@ El repositorio tiene tres workflows: `integration`, `build` y `deploy`.
 
 Disparadores:
 
-- `pull_request`
-  - `types: ["opened", "reopened", "synchronize", "ready_for_review"]`
-  - branches: `["main"]`
-- `workflow_dispatch`
+- `pull_request` con destino a `main` bajo cualquiera de los siguientes estados:
+  - `"opened"` (cuando se crea el pull request)
+  - `"reopened"` (cuando se vuelve a abrir el pull request)
+  - `"synchronize"` (cuando se sincroniza el pull request)
+  - `"ready_for_review"` (cuando se indica que el pull request esta listo para revision)
+- `workflow_dispatch` (disparo de ejecución manual)
 
 Que hace:
 
@@ -144,8 +146,12 @@ Carpetas/archivos que necesita:
 
 Disparadores:
 
-- `push` a `main`
-- `workflow_dispatch`
+- `pull_request` con destino a `main` bajo cualquiera de los siguientes estados:
+  - `"opened"` (cuando se crea el pull request)
+  - `"reopened"` (cuando se vuelve a abrir el pull request)
+  - `"synchronize"` (cuando se sincroniza el pull request)
+  - `"ready_for_review"` (cuando se indica que el pull request esta listo para revision)
+- `workflow_dispatch` (disparo de ejecución manual)
 
 Que hace:
 
